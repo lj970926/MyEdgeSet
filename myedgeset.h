@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <set>
+#include <iostream>
 
 class Edge {};
 
@@ -43,7 +44,7 @@ class EdgeSet::const_iterator {
   typedef typename EdgeSet::value_type value_type;
   typedef const typename EdgeSet::value_type& reference;
   typedef const typename EdgeSet::value_type* pointer;
-  typedef const typename EdgeSet::difference_type difference_type;
+  typedef typename EdgeSet::difference_type difference_type;
   typedef std::forward_iterator_tag iterator_category;
   value_type operator*() const;
   pointer operator->() const;
@@ -60,7 +61,7 @@ class EdgeSet::const_iterator {
  private:
   friend class EdgeSet;
   void const* const* array_iter_ = nullptr;
-  std::set<const Edge*>::const_iterator tree_iter_;
+  typename std::set<const Edge*>::const_iterator tree_iter_;
 };
 
 inline EdgeSet::EdgeSet() {
@@ -91,7 +92,7 @@ inline EdgeSet::const_iterator::pointer EdgeSet::const_iterator::operator->()
 
 inline bool EdgeSet::const_iterator::operator==(
     const const_iterator& other) const {
-  if ((array_iter_ == nullptr) == (other.array_iter_ == nullptr)) {
+  if ((array_iter_ == nullptr) != (other.array_iter_ == nullptr)) {
     return false;
   }
 
@@ -163,6 +164,6 @@ inline EdgeSet::const_iterator EdgeSet::end() const {
   } else {
     itr.array_iter_ = &ptrs_[size()];
   }
-
+  
   return itr;
 }
